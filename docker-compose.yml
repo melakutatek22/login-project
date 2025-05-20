@@ -1,0 +1,35 @@
+version: '3.8'
+services:
+  frontend:
+    build: ./frontend
+    container_name: login-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+
+  backend:
+    build: ./backend
+    container_name: login-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - ASPNETCORE_URLS=http://+:5000
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=login_db;Username=postgres;Password=postgres
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15
+    container_name: login-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: login_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  pgdata:
