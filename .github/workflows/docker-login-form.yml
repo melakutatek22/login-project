@@ -1,4 +1,4 @@
-name: Docker Login Form Test
+name: Docker Login Form Test workflows
 
 on:
   push:
